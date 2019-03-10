@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+		<link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC" rel="stylesheet">
+		<style>
+			html {
+				font-family: 'Noto Serif SC', STFangSong, serif;
+			}
+			
+			main.flex-container {
+				/*对子元素开启弹性布局*/
+				display: flex;
+				/*弹性元素在必要的时候换行*/
+				flex-wrap: wrap;
+				/*将弹性元素居中*/
+				justify-content: center;
+			}
+			
+			div.card {
+				margin: 3px;
+				width: 250px;
+				height: 220px;
+				background-color: #f6f6f6;
+				border-radius: 15px;
+				padding: 20px;
+			}
+			
+			div.front,
+			div.back {
+				font-size: 27px;
+				overflow-y: auto;
+				max-height: 220px;
+			}
+			
+			div.front {
+				text-align: center;
+				line-height: 220px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header></header>
+
+		<main class="flex-container">
+			<div class="card">
+				<div class="front">hours</div>
+				<div class="back" hidden>ou(ə)r a period of time equal to a twenty-fourth part of a day and night and divided into 60 minutes.</div>
+			</div>
+			<div class="card">
+				<div class="front">Almost</div>
+				<div class="back" hidden>2</div>
+			</div>
+			<div class="card">
+				<div class="front">enveloped</div>
+				<div class="back" hidden>3</div>
+			</div>
+			<div class="card">
+				<div class="front">ground</div>
+				<div class="back" hidden>4</div>
+			</div>
+			<div class="card">
+				<div class="front">natures</div>
+				<div class="back" hidden>5</div>
+			</div>
+			<div class="card">
+				<div class="front">memory</div>
+				<div class="back" hidden>6</div>
+			</div>
+			<div class="card">
+				<div class="front">suffused</div>
+				<div class="back" hidden>7</div>
+			</div>
+			<div class="card">
+				<div class="front">→</div>
+			</div>
+		</main>
+
+		<script>
+			let settings = {
+				"async": true,
+				"crossDomain": true,
+				"url": "http://localhost:8090/api/v1/cards?targetId=1000&offset=0&limit=5",
+				"method": "GET",
+				"headers": {
+					"cache-control": "no-cache",
+					"Postman-Token": "e8b49e77-9cbb-47d1-83b0-bf1e86e655c7"
+				}
+			}
+
+			$.ajax(settings).done(response => {
+				console.log(response);
+			});
+
+			$(document).ready(() => {
+				let fronts = document.querySelectorAll("div.front");
+				let backs = document.querySelectorAll("div.back");
+
+				let ipg = {
+					front2back: function(index) {
+						if(fronts[index].hidden) {
+							backs[index].hidden = true;
+							fronts[index].hidden = false;
+						} else {
+							fronts[index].hidden = true;
+							backs[index].hidden = false;
+						}
+					},
+				};
+
+				window.addEventListener("keydown", event => {
+					let k = event.key;
+					if(k >= 1 && k <= 4) {
+						ipg.front2back(Number(k) - 1);
+					} else if(k == 'q') {
+						ipg.front2back(4);
+					} else if(k == 'w') {
+						ipg.front2back(5);
+					} else if(k == 'e') {
+						ipg.front2back(6);
+					} else if(k == 'r') {
+
+					} else if(k == 'b') {
+
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>
