@@ -81,26 +81,57 @@
 		</main>
 
 		<script>
-			let settings = {
-				"async": true,
-				"crossDomain": true,
-				"url": "http://localhost:8090/api/v1/cards?targetId=1000&offset=0&limit=5",
-				"method": "GET",
-				"headers": {
-					"cache-control": "no-cache",
-					"Postman-Token": "e8b49e77-9cbb-47d1-83b0-bf1e86e655c7"
-				}
-			}
-
-			$.ajax(settings).done(response => {
-				console.log(response);
-			});
-
 			$(document).ready(() => {
 				let fronts = document.querySelectorAll("div.front");
 				let backs = document.querySelectorAll("div.back");
 
+				let targetId = getParamFromUrl("targetId");
+				if (undefined === targetId) {
+					alert("targetId undefined");
+					return;
+				}
+				let offset = 0;
+				let limit = 7;
+				let startTime = new Date();
+				
 				let ipg = {
+					reloadDom: function() {
+						let settings = {
+							"async": true,
+							"crossDomain": true,
+							"url": `http://localhost:8090/api/v1/cards?targetId=${targetId}&offset=${offset}&limit=${limit}`,
+							"method": "GET",
+						}
+
+						$.ajax(settings).done(cards => {
+							if (cards.length === 0) {
+								offset -= limit;
+								alert("This is the last page");
+								return;
+							} else {
+								// 填页面
+								for (let i = 0; i !== 7; ++i) {
+									fronts[i].innerText = cards[i].front;
+									backs[i].innerText = cards[i].back;
+									if(fronts[i].hidden) {
+										ipg.front2back(i);
+									}
+								}
+							}
+						});
+					},
+					nextBatchOfWords: function() {
+						offset += limit;
+						ipg.reloadDom();						
+					},
+					preBatchOfWords: function() {
+						if (offset <= 0) {
+							alert("This is the first page");
+							return;
+						}
+						offset -= limit;
+						ipg.reloadDom();
+					},
 					front2back: function(index) {
 						if(fronts[index].hidden) {
 							backs[index].hidden = true;
@@ -109,6 +140,13 @@
 							fronts[index].hidden = true;
 							backs[index].hidden = false;
 						}
+					},
+					showLogs: function() {
+						let endTime = new Date();
+						let msg = "";	
+						msg += `time: ${Math.floor((endTime - startTime) / (1000 * 60))} min\n`;
+						msg +=`offset: ${offset}`;
+						alert(msg);
 					},
 				};
 
@@ -123,12 +161,25 @@
 					} else if(k == 'e') {
 						ipg.front2back(6);
 					} else if(k == 'r') {
-
+						ipg.nextBatchOfWords();
 					} else if(k == 'b') {
-
+						ipg.preBatchOfWords();
+					} else if(k == 'l') {
+						ipg.showLogs();
 					}
 				});
+
+				ipg.reloadDom();
 			});
+
+			function getParamFromUrl(paramName) {
+				let urL = location.href;
+				let params = urL.slice(urL.indexOf("?") + 1);
+				params = params.split("&");
+				for(let [name, value] of params.map(x => x.split("="))) {
+					if(name === paramName) return value;
+				}
+			}
 		</script>
 	</body>
 

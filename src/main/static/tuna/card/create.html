@@ -1,9 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+		<link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC" rel="stylesheet">
+		<style>
+			html * {
+				font-family: 'Noto Serif SC', STFangSong, serif;
+			}
+			
+			main.flex-container {
+				/*对子元素开启弹性布局*/
+				display: flex;
+				/*弹性元素在必要的时候换行*/
+				flex-wrap: wrap;
+				/*将弹性元素居中*/
+				justify-content: center;
+			}
+			
+			div.card {
+				margin: 3px;
+				width: 250px;
+				height: 220px;
+				background-color: #f6f6f6;
+				border-radius: 15px;
+				padding: 20px;
+			}
+			
+			textarea.back {
+				font-size: 27px;
+				overflow-y: auto;
+				max-height: 220px;
+			}
+			
+			div.front {
+				text-align: center;
+				line-height: 220px;
+				font-size: 27px;
+			}
+			
+			input[name=front] {
+				font-size: 27px;
+			}
+		</style>
 	</head>
+
 	<body>
+		<header></header>
+
+		<main class="flex-container">
+			<div class="card">
+				<div class="front"><input type="text" name="front" value="hours" size="5"/></div>
+			</div>
+			<div class="card">
+				<textarea class="back" cols="15" rows="7">Almost</textarea>
+			</div>
+			<div class="card">
+				<div class="front">ok</div>
+			</div>
+		</main>
+
 	</body>
+
 </html>
