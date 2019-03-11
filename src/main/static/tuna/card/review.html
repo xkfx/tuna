@@ -48,32 +48,32 @@
 
 		<main class="flex-container">
 			<div class="card">
-				<div class="front">hours</div>
-				<div class="back" hidden>ou(ə)r a period of time equal to a twenty-fourth part of a day and night and divided into 60 minutes.</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
-				<div class="front">Almost</div>
-				<div class="back" hidden>2</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
-				<div class="front">enveloped</div>
-				<div class="back" hidden>3</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
-				<div class="front">ground</div>
-				<div class="back" hidden>4</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
-				<div class="front">natures</div>
-				<div class="back" hidden>5</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
-				<div class="front">memory</div>
-				<div class="back" hidden>6</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
-				<div class="front">suffused</div>
-				<div class="back" hidden>7</div>
+				<div class="front"></div>
+				<div class="back" hidden></div>
 			</div>
 			<div class="card">
 				<div class="front">→</div>
@@ -86,14 +86,14 @@
 				let backs = document.querySelectorAll("div.back");
 
 				let targetId = getParamFromUrl("targetId");
-				if (undefined === targetId) {
+				if(undefined === targetId) {
 					alert("targetId undefined");
 					return;
 				}
 				let offset = 0;
 				let limit = 7;
 				let startTime = new Date();
-				
+
 				let ipg = {
 					reloadDom: function() {
 						let settings = {
@@ -104,13 +104,13 @@
 						}
 
 						$.ajax(settings).done(cards => {
-							if (cards.length === 0) {
+							if(cards.length === 0) {
 								offset -= limit;
 								alert("This is the last page");
 								return;
 							} else {
 								// 填页面
-								for (let i = 0; i !== 7; ++i) {
+								for(let i = 0; i !== 7; ++i) {
 									fronts[i].innerText = cards[i].front;
 									backs[i].innerText = cards[i].back;
 									if(fronts[i].hidden) {
@@ -122,10 +122,10 @@
 					},
 					nextBatchOfWords: function() {
 						offset += limit;
-						ipg.reloadDom();						
+						ipg.reloadDom();
 					},
 					preBatchOfWords: function() {
-						if (offset <= 0) {
+						if(offset <= 0) {
 							alert("This is the first page");
 							return;
 						}
@@ -143,9 +143,9 @@
 					},
 					showLogs: function() {
 						let endTime = new Date();
-						let msg = "";	
+						let msg = "";
 						msg += `time: ${Math.floor((endTime - startTime) / (1000 * 60))} min\n`;
-						msg +=`offset: ${offset}`;
+						msg += `offset: ${offset}`;
 						alert(msg);
 					},
 				};
@@ -166,6 +166,16 @@
 						ipg.preBatchOfWords();
 					} else if(k == 'l') {
 						ipg.showLogs();
+					} else if(k == 'Tab') {
+						if(confirm("Are you sure you want to leave the current page?")) {
+							window.location.replace("create.html?targetId=" + targetId);
+						}
+						event.preventDefault();
+					} else if(k == 'h') {
+						if(confirm("Are you sure you want to return to the home page?")) {
+							window.location.replace("../index.html");
+						}
+						event.preventDefault();						
 					}
 				});
 

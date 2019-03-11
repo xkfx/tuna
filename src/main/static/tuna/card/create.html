@@ -30,7 +30,6 @@
 			}
 			
 			textarea.back {
-				font-size: 27px;
 				overflow-y: auto;
 				max-height: 220px;
 			}
@@ -41,8 +40,10 @@
 				font-size: 27px;
 			}
 			
-			input[name=front] {
+			input[name=front],
+			textarea.back {
 				font-size: 27px;
+				border-radius: 7px;
 			}
 		</style>
 	</head>
@@ -52,16 +53,79 @@
 
 		<main class="flex-container">
 			<div class="card">
-				<div class="front"><input type="text" name="front" value="hours" size="5"/></div>
+				<div class="front"><input type="text" name="front" placeholder="front ..." size="5" autofocus/></div>
 			</div>
 			<div class="card">
-				<textarea class="back" cols="15" rows="7">Almost</textarea>
+				<textarea class="back" cols="15" rows="7" placeholder="back ..."></textarea>
 			</div>
 			<div class="card">
-				<div class="front">ok</div>
+				<div class="front" id="ok">ok</div>
 			</div>
 		</main>
+		<script>
+			$(document).ready(() => {
+				let front = document.querySelector("input[name=front]");
+				let back = document.querySelector("textarea.back");
+				let ok = document.querySelector("#ok");
 
+				let targetId = getParamFromUrl("targetId");
+				if(undefined === targetId) {
+					alert("targetId undefined");
+					return;
+				}
+				
+				let ipg = {
+					submitData: function() {
+						let settings = {
+							"async": true,
+							"crossDomain": true,
+							"url": "http://localhost:8090/api/v1/cards",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/x-www-form-urlencoded",
+								"cache-control": "no-cache",
+							},
+							"data": {
+								"front": front.value,
+								"back": back.value,
+								"targetId": targetId,
+							},
+						}
+
+						$.ajax(settings).done(function(response) {							
+							console.log(response);
+							alert(JSON.stringify(response));
+						}).fail(e => {
+							console.log(e);
+							alert(JSON.stringify(e.responseJSON));
+						});
+					},
+				};
+				
+				ok.addEventListener("click", event => {
+					ipg.submitData();
+				});
+				
+				window.addEventListener("keydown", event => {
+					let k = event.key;
+					if (k == 'Escape') {
+						if(confirm("Are you sure you want to leave the current page?")) {
+							window.location.replace("review.html?targetId=" + targetId);
+						}
+						event.preventDefault();						
+					}
+				});
+			});
+
+			function getParamFromUrl(paramName) {
+				let urL = location.href;
+				let params = urL.slice(urL.indexOf("?") + 1);
+				params = params.split("&");
+				for(let [name, value] of params.map(x => x.split("="))) {
+					if(name === paramName) return value;
+				}
+			}
+		</script>
 	</body>
 
 </html>
