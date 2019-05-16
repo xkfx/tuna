@@ -8,7 +8,7 @@ CREATE TABLE target (
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
 
-SET NAMES gbk;
+-- SET NAMES gbk; 仅WINDOWS控制台需要该指令
 INSERT INTO target(name, comment)
 VALUES
   ("this is a test book", "前置条件: cet 4
