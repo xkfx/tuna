@@ -73,7 +73,7 @@
 					alert("targetId undefined");
 					return;
 				}
-				
+
 				let ipg = {
 					submitData: function() {
 						let settings = {
@@ -92,7 +92,7 @@
 							},
 						}
 
-						$.ajax(settings).done(function(response) {							
+						$.ajax(settings).done(function(response) {
 							console.log(response);
 							alert(JSON.stringify(response));
 						}).fail(e => {
@@ -101,18 +101,18 @@
 						});
 					},
 				};
-				
+
 				ok.addEventListener("click", event => {
 					ipg.submitData();
 				});
-				
+
 				window.addEventListener("keydown", event => {
 					let k = event.key;
-					if (k == 'Escape') {
+					if(k == 'Escape') {
 						if(confirm("Are you sure you want to leave the current page?")) {
 							window.location.replace("review.html?targetId=" + targetId);
 						}
-						event.preventDefault();						
+						event.preventDefault();
 					}
 				});
 			});

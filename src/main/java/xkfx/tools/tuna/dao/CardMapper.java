@@ -1,5 +1,6 @@
 package xkfx.tools.tuna.dao;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import xkfx.tools.tuna.model.Card;
 

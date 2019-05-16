@@ -2,4 +2,5 @@ script/
 .idea/
 target/
 tuna.iml
+src/main/resources/application.properties
 
