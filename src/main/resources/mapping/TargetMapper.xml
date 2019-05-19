@@ -24,6 +24,7 @@
     select
     <include refid="Base_Column_List" />
     from target
+    ORDER BY name
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">

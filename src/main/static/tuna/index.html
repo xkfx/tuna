@@ -1,9 +1,82 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-	</head>
-	<body>
-	</body>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC" rel="stylesheet">
+	<style>
+		html {
+			font-family: 'Noto Serif SC', STFangSong, serif;
+		}
+
+		main.flex-container {
+			/*对子元素开启弹性布局*/
+			display: flex;
+			/*弹性元素在必要的时候换行*/
+			flex-wrap: wrap;
+			/*将弹性元素居中*/
+			justify-content: center;
+
+			font-size: 27px;
+		}
+	</style>
+</head>
+
+<body>
+	<header></header>
+
+	<main class="flex-container">
+
+	</main>
+
+	<script>
+		$(document).ready(() => {
+
+			let currentData = null;
+
+			let ipg = {
+				reloadDom: function() {
+					let settings = {
+						"async": true,
+						"crossDomain": true,
+						"url": "http://localhost:8090/api/v1/targets",
+						"method": "GET",
+					};
+
+					$.ajax(settings).done(targets => {
+						currentData = targets;
+
+						let ul_targets = elt('ul', {});
+						for (let i = 0; i != currentData.length; ++i) {
+							let li_target = elt('li', {},
+								elt('a', { href: `card/review.html?targetId=${currentData[i].id}`}, currentData[i].name));
+							ul_targets.appendChild(li_target);
+						}
+						document.querySelector(".flex-container").appendChild(ul_targets);
+					});
+				},
+			};
+
+			ipg.reloadDom();
+		});
+
+		function elt(name, attrs, ...children) {
+			let dom = document.createElement(name);
+			for (let attr of Object.keys(attrs)) {
+				dom.setAttribute(attr, attrs[attr]);
+			}
+			for (let child of children) {
+				if (["string", "number"].indexOf(typeof child) == -1) {
+					dom.appendChild(child);
+				} else {
+					dom.appendChild(document.createTextNode(child));
+				}
+			}
+			return dom;
+		}
+	</script>
+</body>
+
 </html>
