@@ -32,7 +32,6 @@ public class Card {
      *
      * @mbg.generated Sat Mar 09 19:07:41 GMT+08:00 2019
      */
-    @NotBlank(message = "back不能为空")
     private String back;
 
     /**
