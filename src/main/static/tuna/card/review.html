@@ -87,6 +87,7 @@
 
 	<script>
 		$(document).ready(() => {
+			// TODO 需重构分页功能。。。删除时有视图上的BUG
 			let fronts = document.querySelectorAll("div.front");
 			let backs = document.querySelectorAll("div.back");
 
@@ -98,6 +99,8 @@
 			let offset = 0;
 			let limit = 7;
 			let startTime = new Date();
+
+			let currentCards = null;
 
 			let ipg = {
 				reloadDom: function() {
@@ -114,16 +117,39 @@
 							alert("This is the last page");
 							return;
 						} else {
-							// 填页面
-							for (let i = 0; i !== 7; ++i) {
+							// 将数据填到相应卡片
+							for (let i = 0; i !== cards.length; ++i) {
 								fronts[i].innerText = cards[i].front;
 								backs[i].innerText = cards[i].back;
 								if (fronts[i].hidden) {
 									ipg.front2back(i);
 								}
 							}
+							// 清除无效数据
+							for (let i = cards.length; i !== 7; ++i) {
+								fronts[i].innerText = "";
+								backs[i].innerText = "";
+							}
+							// 缓存当前数据至内存
+							currentCards = cards;
 						}
 					});
+				},
+				removeCard: function(no) {
+					if (currentCards != null && currentCards.length > no) {
+						let settings = {
+							"async": true,
+							"crossDomain": true,
+							"url": `http://localhost:8090/api/v1/cards?cardId=${currentCards[no].id}`,
+							"method": "DELETE",
+						}
+
+						$.ajax(settings).done(function(response) {
+							ipg.reloadDom();
+						});
+					} else {
+						alert('This card does not exist!');
+					}
 				},
 				nextBatchOfWords: function() {
 					offset += limit;
@@ -188,7 +214,7 @@
 				selector: '.card',
 				callback: function(key, options) {
 					if (key == 'delete') {
-						alert($(this)[0].dataset.no);
+						ipg.removeCard($(this)[0].dataset.no);
 					}
 				},
 				items: {

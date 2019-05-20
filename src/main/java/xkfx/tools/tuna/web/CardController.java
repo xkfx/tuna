@@ -32,4 +32,10 @@ public class CardController {
         cardService.saveCard(card);
         return new ResponseEntity<>(card, HttpStatus.CREATED);
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> removeCard(Long cardId) {
+        cardService.removeCard(cardId);
+        return new ResponseEntity<>(cardId, HttpStatus.NO_CONTENT);
+    }
 }

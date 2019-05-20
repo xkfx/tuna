@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class CardServiceImpl implements CardService {
 
-    @Autowired
     private final CardMapper cardMapper;
 
     @Autowired
@@ -34,5 +33,10 @@ public class CardServiceImpl implements CardService {
             card.setBack(card.getBack().trim());
         }
         cardMapper.insertSelective(card);
+    }
+
+    @Override
+    public void removeCard(Long cardId) {
+        cardMapper.deleteByPrimaryKey(cardId);
     }
 }

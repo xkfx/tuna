@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class TargetServiceImpl implements TargetService {
 
-    @Autowired
     private final TargetMapper targetMapper;
 
     @Autowired

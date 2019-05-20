@@ -18,4 +18,6 @@ public interface CardService {
                         @Range(min = 1, max = Short.MAX_VALUE, message = "limit不规范") Integer limit);
 
     void saveCard(@Valid Card card);
+
+    void removeCard(@Range(min = 1000L, message = "cardId不规范") Long cardId);
 }

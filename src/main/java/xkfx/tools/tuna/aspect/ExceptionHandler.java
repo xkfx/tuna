@@ -35,8 +35,9 @@ public class ExceptionHandler {
     }
 
     /**
-     * 切面无法捕获Spring调用控制层方法
-     * 前所抛出的异常（例如将null转化为primitive类型）
+     * 切面无法捕获Spring调用控制层方法前所抛出的异常
+     * （例如将null转化为primitive类型）故仍然需要此方法，
+     * 可进一步对异常进行分类处理。
      */
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleFrameworkExceptions(Throwable e) {
