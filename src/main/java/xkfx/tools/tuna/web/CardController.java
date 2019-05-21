@@ -36,6 +36,6 @@ public class CardController {
     @DeleteMapping
     public ResponseEntity<?> removeCard(Long cardId) {
         cardService.removeCard(cardId);
-        return new ResponseEntity<>(cardId, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

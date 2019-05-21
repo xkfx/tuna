@@ -96,11 +96,18 @@
 				alert("targetId undefined");
 				return;
 			}
+
 			let offset = 0;
 			let limit = 7;
 			let startTime = new Date();
 
 			let currentCards = null;
+
+			let pageInfo = {
+				curPage: 0,
+				pageSize: 7,
+				totalPages: 0,
+			};
 
 			let ipg = {
 				reloadDom: function() {
@@ -109,11 +116,10 @@
 						"crossDomain": true,
 						"url": `http://localhost:8090/api/v1/cards?targetId=${targetId}&offset=${offset}&limit=${limit}`,
 						"method": "GET",
-					}
+					};
 
 					$.ajax(settings).done(cards => {
 						if (cards.length === 0) {
-							offset -= limit;
 							alert("This is the last page");
 							return;
 						} else {
@@ -126,7 +132,7 @@
 								}
 							}
 							// 清除无效数据
-							for (let i = cards.length; i !== 7; ++i) {
+							for (let i = cards.length; i !== limit; ++i) {
 								fronts[i].innerText = "";
 								backs[i].innerText = "";
 							}
@@ -144,7 +150,7 @@
 							"method": "DELETE",
 						}
 
-						$.ajax(settings).done(function(response) {
+						$.ajax(settings).done(response => {
 							ipg.reloadDom();
 						});
 					} else {

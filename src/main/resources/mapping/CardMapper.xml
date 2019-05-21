@@ -21,6 +21,10 @@
     id, front, back, target_id
   </sql>
 
+  <select id="getCountByTargetId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    select count(*) from card where target_id = #{targetId}
+  </select>
+
   <select id="listCard" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

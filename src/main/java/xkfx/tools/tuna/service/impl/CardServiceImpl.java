@@ -7,7 +7,9 @@ import xkfx.tools.tuna.dao.CardMapper;
 import xkfx.tools.tuna.model.Card;
 import xkfx.tools.tuna.service.CardService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -38,5 +40,15 @@ public class CardServiceImpl implements CardService {
     @Override
     public void removeCard(Long cardId) {
         cardMapper.deleteByPrimaryKey(cardId);
+    }
+
+    @Override
+    public Map<String, Object> getCardReviewVo(Long targetId, Integer pageSize, Integer pageNo) {
+        List<Card> list = cardMapper.listCard(targetId, (pageNo - 1) * pageSize, pageSize);
+        Integer count = cardMapper.getCountByTargetId(targetId);
+        Map<String, Object> nodes = new HashMap<>();
+        nodes.put("cardList", list);
+        nodes.put("totalNumberOfPages", (count + pageSize - 1) / pageSize);
+        return nodes;
     }
 }
