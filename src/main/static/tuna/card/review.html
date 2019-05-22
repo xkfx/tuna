@@ -32,11 +32,11 @@
 			background-color: #f6f6f6;
 			border-radius: 15px;
 			padding: 20px;
+			font-size: 27px;
 		}
 
 		div.front,
 		div.back {
-			font-size: 27px;
 			overflow-y: auto;
 			max-height: 220px;
 		}
@@ -87,7 +87,6 @@
 
 	<script>
 		$(document).ready(() => {
-			// TODO 需重构分页功能。。。删除时有视图上的BUG
 			let fronts = document.querySelectorAll("div.front");
 			let backs = document.querySelectorAll("div.back");
 
@@ -97,47 +96,42 @@
 				return;
 			}
 
-			let offset = 0;
-			let limit = 7;
 			let startTime = new Date();
 
-			let currentCards = null;
-
-			let pageInfo = {
-				curPage: 0,
-				pageSize: 7,
-				totalPages: 0,
+			let pgInfo = {
+				no: 1,
+				size: 7,
+				totalNumberOfPages: 0,
 			};
+
+			let currentCards = null;
 
 			let ipg = {
 				reloadDom: function() {
 					let settings = {
 						"async": true,
 						"crossDomain": true,
-						"url": `http://localhost:8090/api/v1/cards?targetId=${targetId}&offset=${offset}&limit=${limit}`,
+						"url": `http://localhost:8090/api/v1/card_review_vo?targetId=${targetId}&pageSize=${pgInfo.size}&pageNo=${pgInfo.no}`,
 						"method": "GET",
 					};
 
-					$.ajax(settings).done(cards => {
-						if (cards.length === 0) {
-							alert("This is the last page");
-							return;
-						} else {
-							// 将数据填到相应卡片
-							for (let i = 0; i !== cards.length; ++i) {
-								fronts[i].innerText = cards[i].front;
-								backs[i].innerText = cards[i].back;
-								if (fronts[i].hidden) {
-									ipg.front2back(i);
-								}
+					$.ajax(settings).done(vo => {
+						// 将当前数据保存至内存
+						currentCards = vo.cardList;
+						pgInfo.totalNumberOfPages = vo.totalNumberOfPages;
+
+						// 将数据填到相应卡片
+						for (let i = 0; i !== currentCards.length; ++i) {
+							fronts[i].innerText = currentCards[i].front;
+							backs[i].innerText = currentCards[i].back;
+							if (fronts[i].hidden) {
+								ipg.front2back(i);
 							}
-							// 清除无效数据
-							for (let i = cards.length; i !== limit; ++i) {
-								fronts[i].innerText = "";
-								backs[i].innerText = "";
-							}
-							// 缓存当前数据至内存
-							currentCards = cards;
+						}
+						// 清除无效数据
+						for (let i = currentCards.length; i !== pgInfo.size; ++i) {
+							fronts[i].innerText = "";
+							backs[i].innerText = "";
 						}
 					});
 				},
@@ -158,16 +152,20 @@
 					}
 				},
 				nextBatchOfWords: function() {
-					offset += limit;
-					ipg.reloadDom();
+					if (pgInfo.no < pgInfo.totalNumberOfPages) {
+						pgInfo.no++;
+						ipg.reloadDom();
+					} else {
+						alert('Last page');
+					}
 				},
 				preBatchOfWords: function() {
-					if (offset <= 0) {
-						alert("This is the first page");
-						return;
+					if (pgInfo.no > 1) {
+						pgInfo.no--;
+						ipg.reloadDom();
+					} else {
+						alert('First page');
 					}
-					offset -= limit;
-					ipg.reloadDom();
 				},
 				front2back: function(index) {
 					if (fronts[index].hidden) {
@@ -182,7 +180,7 @@
 					let endTime = new Date();
 					let msg = "";
 					msg += `time: ${Math.floor((endTime - startTime) / (1000 * 60))} min\n`;
-					msg += `offset: ${offset}`;
+					msg += `pgInfo.no: ${pgInfo.no}`;
 					alert(msg);
 				},
 			};
