@@ -24,26 +24,29 @@
 			justify-content: center;
 		}
 
-		div.special-card,
-		div.card {
+		div.card-wrap {
+			padding: 20px;
 			margin: 3px;
 			width: 250px;
 			height: 220px;
-			background-color: #f6f6f6;
 			border-radius: 15px;
-			padding: 20px;
+			background-color: #f6f6f6;
 			font-size: 27px;
-		}
 
-		div.front,
-		div.back {
 			overflow-y: auto;
 			max-height: 220px;
 		}
 
-		div.front {
+		div.card {
+			display: table;
+			height: 220px;
+			width: 250px;
+		}
+
+		span.card-text {
+			display: table-cell;
+			vertical-align: middle;
 			text-align: center;
-			line-height: 220px;
 		}
 	</style>
 </head>
@@ -52,43 +55,51 @@
 	<header></header>
 
 	<main class="flex-container">
-		<div class="card" data-no="0">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="0">
+				<span class="card-text">烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫<span>
+			</div>
 		</div>
-		<div class="card" data-no="1">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="1">
+				<span class="card-text">烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫烫<span>
+			</div>
 		</div>
-		<div class="card" data-no="2">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="2">
+				<span class="card-text"><span>
+			</div>
 		</div>
-		<div class="card" data-no="3">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="3">
+				<span class="card-text"><span>
+			</div>
 		</div>
-		<div class="card" data-no="4">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="4">
+				<span class="card-text"><span>
+			</div>
 		</div>
-		<div class="card" data-no="5">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="5">
+				<span class="card-text"><span>
+			</div>
 		</div>
-		<div class="card" data-no="6">
-			<div class="front"></div>
-			<div class="back" hidden></div>
+		<div class="card-wrap">
+			<div class="card" data-no="6">
+				<span class="card-text"><span>
+			</div>
 		</div>
-		<div class="special-card">
-			<div class="front">→</div>
+		<div class="card-wrap" data-no="7">
+			<div class="card">
+				<span class="card-text">→<span>
+			</div>
 		</div>
 	</main>
 
 	<script>
 		$(document).ready(() => {
-			let fronts = document.querySelectorAll("div.front");
-			let backs = document.querySelectorAll("div.back");
+			let spanCardText = document.querySelectorAll("span.card-text");
 
 			let targetId = getParamFromUrl("targetId");
 			if (undefined === targetId) {
@@ -122,16 +133,12 @@
 
 						// 将数据填到相应卡片
 						for (let i = 0; i !== currentCards.length; ++i) {
-							fronts[i].innerText = currentCards[i].front;
-							backs[i].innerText = currentCards[i].back;
-							if (fronts[i].hidden) {
-								ipg.front2back(i);
-							}
+							spanCardText[i].innerText = currentCards[i].front;
 						}
+
 						// 清除无效数据
 						for (let i = currentCards.length; i !== pgInfo.size; ++i) {
-							fronts[i].innerText = "";
-							backs[i].innerText = "";
+							spanCardText[i].innerText = "";
 						}
 					});
 				},
@@ -168,12 +175,10 @@
 					}
 				},
 				front2back: function(index) {
-					if (fronts[index].hidden) {
-						backs[index].hidden = true;
-						fronts[index].hidden = false;
+					if (spanCardText[index].innerText == currentCards[index].front) {
+						spanCardText[index].innerText = currentCards[index].back;
 					} else {
-						fronts[index].hidden = true;
-						backs[index].hidden = false;
+						spanCardText[index].innerText = currentCards[index].front;
 					}
 				},
 				showLogs: function() {
@@ -246,6 +251,12 @@
 			for (let [name, value] of params.map(x => x.split("="))) {
 				if (name === paramName) return value;
 			}
+		}
+
+		// 获取字符串的真实长度。
+		// 一个汉字算两个字符，以便根据真实字符串长度调整视图
+		function getRealLength(str) {
+			return str.replace(/[^\x00-\xff]/g, "**").length;
 		}
 	</script>
 </body>

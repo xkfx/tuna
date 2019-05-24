@@ -29,21 +29,18 @@
 				padding: 20px;
 			}
 
+			textarea.front,
 			textarea.back {
 				overflow-y: auto;
 				max-height: 220px;
-			}
-
-			div.front {
-				text-align: center;
-				line-height: 220px;
-				font-size: 27px;
-			}
-
-			input[name=front],
-			textarea.back {
 				font-size: 27px;
 				border-radius: 7px;
+			}
+
+			#ok {
+				font-size: 27px;
+				text-align: center;
+				line-height: 220px;
 			}
 		</style>
 	</head>
@@ -53,18 +50,18 @@
 
 		<main class="flex-container">
 			<div class="card">
-				<div class="front"><input type="text" name="front" placeholder="front ..." size="5" autofocus/></div>
+				<textarea class="front" cols="15" rows="7" placeholder="front ..." autofocus></textarea>
 			</div>
 			<div class="card">
 				<textarea class="back" cols="15" rows="7" placeholder="back ... (Not necessary)"></textarea>
 			</div>
 			<div class="card">
-				<div class="front" id="ok">ok</div>
+				<div id="ok">ok</div>
 			</div>
 		</main>
 		<script>
 			$(document).ready(() => {
-				let front = document.querySelector("input[name=front]");
+				let front = document.querySelector("textarea.front");
 				let back = document.querySelector("textarea.back");
 				let ok = document.querySelector("#ok");
 
@@ -125,6 +122,7 @@
 					if(name === paramName) return value;
 				}
 			}
+
 		</script>
 	</body>
 
