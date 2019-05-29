@@ -6,6 +6,11 @@
 	<title></title>
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 	<style>
 		html {
 			font-family: 'Noto Serif SC', STFangSong, serif;
@@ -26,14 +31,12 @@
 
 <body>
 	<header></header>
-
 	<main class="flex-container">
 
 	</main>
 
 	<script>
 		$(document).ready(() => {
-
 			let currentData = null;
 
 			let ipg = {
@@ -50,11 +53,46 @@
 
 						let ul_targets = elt('ul', {});
 						for (let i = 0; i != currentData.length; ++i) {
-							let li_target = elt('li', {},
-								elt('a', { href: `card/review.html?targetId=${currentData[i].id}`}, currentData[i].name));
+							let li_target = elt('li', {
+									'data-no': i
+								},
+								elt('a', {
+									href: `card/review.html?targetId=${currentData[i].id}`
+								}, currentData[i].name));
 							ul_targets.appendChild(li_target);
 						}
 						document.querySelector(".flex-container").appendChild(ul_targets);
+					});
+
+					$.contextMenu({
+						selector: 'main ul li',
+						callback: function(key, options) {
+							if (key == 'delete') {
+								alert("暂不提供删除功能。")
+								console.log($(this))
+								console.log($(this)[0].dataset.no);
+							}
+							if (key == 'export') {
+								alert('敬请期待。')
+							}
+						},
+						items: {
+							"export": {
+								name: "Export",
+								icon: "fas fa-file-export",
+							},
+							"delete": {
+								name: "Delete",
+								icon: "far fa-trash-alt",
+							},
+							"sep1": "---------",
+							"quit": {
+								name: "Quit",
+								icon: function() {
+									return 'context-menu-icon context-menu-icon-quit';
+								},
+							},
+						},
 					});
 				},
 			};
