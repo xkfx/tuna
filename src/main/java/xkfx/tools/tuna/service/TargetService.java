@@ -7,4 +7,6 @@ import java.util.List;
 public interface TargetService {
 
     List<Target> listAll();
+
+    Target getByPrimaryKey(Long id);
 }

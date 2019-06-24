@@ -22,4 +22,9 @@ public class TargetServiceImpl implements TargetService {
     public List<Target> listAll() {
         return targetMapper.selectAll();
     }
+
+    @Override
+    public Target getByPrimaryKey(Long id) {
+        return targetMapper.selectByPrimaryKey(id);
+    }
 }

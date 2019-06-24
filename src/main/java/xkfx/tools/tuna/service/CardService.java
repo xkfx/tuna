@@ -28,4 +28,11 @@ public interface CardService {
                                         @Range(min = 1, max = Short.MAX_VALUE, message = "pageSize不规范") Integer pageSize,
                                         @NotNull(message = "pageNo不能为空")
                                         @Range(min = 1, max = Short.MAX_VALUE, message = "pageNo不规范") Integer pageNo);
+
+    /**
+     * 生成单词本对应的电子表格文件。
+     * @param targetId 单词本id
+     * @return 文件的绝对路径
+     */
+    String generateXlsxFile(Long targetId);
 }
