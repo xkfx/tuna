@@ -50,7 +50,6 @@
 
 					$.ajax(settings).done(targets => {
 						currentData = targets;
-
 						let ul_targets = elt('ul', {});
 						for (let i = 0; i != currentData.length; ++i) {
 							let li_target = elt('li', {
@@ -62,42 +61,124 @@
 							ul_targets.appendChild(li_target);
 						}
 						document.querySelector(".flex-container").appendChild(ul_targets);
-					});
-
-					$.contextMenu({
-						selector: 'main ul li',
-						callback: function(key, options) {
-							if (key == 'delete') {
-								alert("暂不提供删除功能。")
-								console.log($(this))
-								console.log($(this)[0].dataset.no);
-							}
-							if (key == 'export') {
-								alert('敬请期待。')
-							}
-						},
-						items: {
-							"export": {
-								name: "Export",
-								icon: "fas fa-file-export",
+						// registerContextMenuOnListItem();
+						$.contextMenu({
+							selector: 'main ul li',
+							callback: function(key, options) {
+								if (key == 'delete') {
+									if (confirm("确认删除该项吗？")) {
+										let no = $(this)[0].dataset.no;
+										ipg.removeTarget(currentData[no].id);
+									}
+								}
+								if (key == 'export') {
+									let no = $(this)[0].dataset.no;
+									ipg.downloadCards(currentData[no].id);
+								}
+								if (key == 'publish') {
+									alert("敬请期待。")
+								}
 							},
-							"delete": {
-								name: "Delete",
-								icon: "far fa-trash-alt",
-							},
-							"sep1": "---------",
-							"quit": {
-								name: "Quit",
-								icon: function() {
-									return 'context-menu-icon context-menu-icon-quit';
+							items: {
+								"export": {
+									name: "Export",
+									icon: "fas fa-file-export",
+								},
+								"publish": {
+									name: "Publish",
+									icon: "far fa-share-square",
+								},
+								"delete": {
+									name: "Delete",
+									icon: "far fa-trash-alt",
+								},
+								"sep1": "---------",
+								"quit": {
+									name: "Quit",
+									icon: function() {
+										return 'context-menu-icon context-menu-icon-quit';
+									},
 								},
 							},
+						});
+					});
+				},
+
+				downloadCards: function(targetId) {
+					let $form = $('<form method="GET"></form>');
+					let url = `http://localhost:8090/api/v1/cards/xlsx/${targetId}`;
+					$form.attr('action', url);
+					$form.appendTo($('body'));
+					$form.submit();
+				},
+
+				removeTarget: function(targetId) {
+					let settings = {
+						"async": true,
+						"crossDomain": true,
+						"url": `http://localhost:8090/api/v1/targets?targetId=${targetId}`,
+						"method": "DELETE",
+					};
+
+					$.ajax(settings).done(resp => {
+						location.reload();
+					});
+				},
+
+				saveTarget: function(targetName) {
+					let settings = {
+						"async": true,
+						"crossDomain": true,
+						"url": "http://localhost:8090/api/v1/targets",
+						"method": "POST",
+						"headers": {
+							"Content-Type": "application/x-www-form-urlencoded",
+							"cache-control": "no-cache",
 						},
+						"data": {
+							"name": targetName,
+						}
+					}
+
+					$.ajax(settings).done(function(response) {
+						console.log(response);
+						alert("创建成功");
+						location.reload();
 					});
 				},
 			};
 
 			ipg.reloadDom();
+
+			$.contextMenu({
+				selector: 'body',
+				callback: function(key, options) {
+					if (key == 'create') {
+						let targetName = prompt("请输入单词本名称");
+						ipg.saveTarget(targetName);
+					}
+					if (key == 'import') {
+						alert("敬请期待。")
+					}
+				},
+				items: {
+					"import": {
+						name: "Import",
+						icon: "fas fa-file-import",
+					},
+					"create": {
+						name: "New Target",
+						icon: "far fa-file",
+					},
+					"sep1": "---------",
+					"quit": {
+						name: "Quit",
+						icon: function() {
+							return 'context-menu-icon context-menu-icon-quit';
+						},
+					},
+				},
+			});
 		});
 
 		function elt(name, attrs, ...children) {

@@ -27,4 +27,14 @@ public class TargetServiceImpl implements TargetService {
     public Target getByPrimaryKey(Long id) {
         return targetMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public void saveTarget(Target target) {
+        targetMapper.insertSelective(target);
+    }
+
+    @Override
+    public void removeTarget(Long targetId) {
+        targetMapper.deleteByPrimaryKey(targetId);
+    }
 }

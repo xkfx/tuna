@@ -30,8 +30,6 @@ VALUES
 
 
 -- 2019年5月19日
--- back字段本意是用来保存单词的释义。
--- 但后来发现back的存在不是很有必要，自己编辑释义很累，实际也不怎么认真去看，
--- 完全可以引用第三方词典来完成这个功能。但是考虑到添加一点自己的东西，可能
--- 有益于记忆，所以没有删除而是保留该字段，不过允许为空。
 ALTER TABLE card MODIFY back VARCHAR(255) DEFAULT '没有内容';
+-- 2019年6月26日
+ALTER TABLE target MODIFY comment VARCHAR(255) NULL;

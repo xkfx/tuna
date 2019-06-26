@@ -43,8 +43,9 @@ public class CardController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping("/xlsx")
-    public void downloadCards(HttpServletResponse resp, Long targetId) {
+    @RequestMapping("/xlsx/{targetId}")
+    public void downloadCards(HttpServletResponse resp,
+                              @PathVariable Long targetId) {
         String location = cardService.generateXlsxFile(targetId);
         File file = new File(location);
         if (file.exists()) {

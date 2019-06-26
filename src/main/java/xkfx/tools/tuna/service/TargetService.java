@@ -9,4 +9,8 @@ public interface TargetService {
     List<Target> listAll();
 
     Target getByPrimaryKey(Long id);
+
+    void saveTarget(Target target);
+
+    void removeTarget(Long targetId);
 }
